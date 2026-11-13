@@ -231,7 +231,7 @@ const Chatbox = ({ selectedUser, onBack }) => {
         <section className="h-screen w-[100%] bg-[#e5f6f3] flex flex-col justify-center items-center p-6 text-center">
           <img src={logo} alt="Chat Logo" className="w-20 mb-4 drop-shadow-sm" />
           <h1 className="text-[26px] font-bold text-teal-800">
-            Welcome to Chatfrik
+            Welcome to Chatak
           </h1>
           <p className="text-gray-500 max-w-sm mt-2 text-sm">
             Select a conversation or start a new chat with friends
