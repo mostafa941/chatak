@@ -83,7 +83,7 @@ const NotificationsPage = ({ onSelectChat, notifications }) => {
   };
 
   return (
-    <section className="flex flex-col items-start justify-start h-screen w-full bg-white">
+    <section className="flex flex-col items-start justify-start h-full w-full bg-white overflow-hidden">
       {/* Avatar Preview Modal */}
       {previewUser && (
         <AvatarPreviewModal

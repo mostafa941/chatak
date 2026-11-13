@@ -80,7 +80,7 @@ const ProfilePage = ({ onBack }) => {
   };
 
   return (
-    <section className="flex flex-col items-center h-screen w-full bg-[#e5f6f3]">
+    <section className="flex flex-col items-center h-full w-full bg-[#e5f6f3] overflow-hidden">
       {/* Avatar Preview Modal */}
       {previewUser && (
         <AvatarPreviewModal

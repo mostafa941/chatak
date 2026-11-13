@@ -116,122 +116,132 @@ const Chatbox = ({ selectedUser, onBack }) => {
       )}
 
       {selectedUser ? (
-        <section className="flex flex-col items-start justify-start h-screen w-[100%] background-image">
-          {/* Header */}
-          <header className="w-[100%] h-[74px] px-4 py-3 bg-white flex items-center justify-between border-b border-[#9090902c] shadow-sm">
-            <div className="flex items-center gap-3">
+        <section className="flex flex-col h-[100dvh] lg:h-screen w-full bg-[#f4f7f6] background-image overflow-hidden">
+          {/* Header (flex-shrink-0, fixed at top) */}
+          <header className="flex-shrink-0 w-full h-[60px] sm:h-[68px] px-3 sm:px-4 bg-white flex items-center justify-between border-b border-[#9090902c] shadow-xs z-10">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               {/* Back button for mobile */}
               {onBack && (
                 <button
                   onClick={onBack}
-                  className="lg:hidden text-[#01AA85] text-2xl hover:bg-[#D9F2ED] p-1.5 rounded-lg transition-colors"
+                  className="lg:hidden text-[#01AA85] hover:bg-[#D9F2ED] p-2 -ml-1 rounded-full transition-colors flex-shrink-0"
+                  title="Back to chats"
                 >
-                  <RiArrowLeftLine />
+                  <RiArrowLeftLine size={22} />
                 </button>
               )}
-              {/* Avatar - click specifically to preview */}
+
+              {/* Avatar */}
               <img
                 src={activeUser?.image || defaultAvatar}
-                className="w-11 h-11 object-cover rounded-full cursor-pointer hover:ring-2 hover:ring-[#01AA85] transition-all shadow-sm"
+                className="w-10 h-10 sm:w-11 sm:h-11 object-cover rounded-full cursor-pointer hover:ring-2 hover:ring-[#01AA85] transition-all shadow-xs flex-shrink-0"
                 alt={activeUser?.fullName}
                 onClick={() => setPreviewUser(activeUser)}
                 title="Click to view full picture and bio"
               />
+
+              {/* User Name & Handle */}
               <div
-                className="cursor-pointer"
+                className="cursor-pointer min-w-0 flex-1"
                 onClick={() => setPreviewUser(activeUser)}
               >
-                <h3 className="font-semibold text-[#2A3D39] text-base leading-tight">
+                <h3 className="font-semibold text-[#2A3D39] text-[15px] sm:text-base leading-tight truncate">
                   {activeUser?.fullName || "Chat User"}
                 </h3>
-                <p className="font-light text-[#2A3D39] text-xs">
+                <p className="font-light text-[#2A3D39] text-[12px] truncate">
                   @{activeUser?.username || "username"}
                 </p>
               </div>
             </div>
           </header>
 
-          {/* Messages Body */}
-          <main className="custom-scrollbar relative h-[calc(100vh-74px)] w-[100%] flex flex-col justify-between">
-            <section className="px-3 pt-5 pb-24 lg:pb-16 flex-1 overflow-y-auto">
-              <div ref={scrollRef} className="overflow-y-auto h-full max-h-[75vh]">
-                {sortedMessages?.map((msg, index) => {
-                  const isMe = msg?.sender === currentEmail;
+          {/* Messages Area (flex-1, min-h-0, scrollable container) */}
+          <main
+            ref={scrollRef}
+            className="flex-1 min-h-0 overflow-y-auto px-3 sm:px-5 py-3 custom-scrollbar"
+          >
+            <div className="flex flex-col justify-end min-h-full space-y-3 pb-2">
+              {sortedMessages?.map((msg, index) => {
+                const isMe = msg?.sender === currentEmail;
 
-                  return (
+                return (
+                  <div
+                    key={msg.id || index}
+                    className={`flex w-full ${
+                      isMe ? "justify-end" : "justify-start"
+                    }`}
+                  >
+                    {!isMe && (
+                      <img
+                        src={activeUser?.image || defaultAvatar}
+                        className="h-8 w-8 sm:h-9 sm:w-9 object-cover rounded-full mr-2 self-end mb-1 flex-shrink-0 cursor-pointer"
+                        alt=""
+                        onClick={() => setPreviewUser(activeUser)}
+                      />
+                    )}
+
                     <div
-                      key={msg.id || index}
-                      className={`flex w-full mb-3 ${
-                        isMe ? "justify-end" : "justify-start"
+                      className={`max-w-[82%] sm:max-w-[65%] rounded-2xl px-3.5 py-2 sm:px-4 sm:py-2.5 shadow-xs ${
+                        isMe
+                          ? "bg-[#01AA85] text-white rounded-br-xs"
+                          : "bg-white text-[#2A3D39] rounded-bl-xs border border-gray-100"
                       }`}
                     >
-                      {!isMe && (
-                        <img
-                          src={activeUser?.image || defaultAvatar}
-                          className="h-9 w-9 object-cover rounded-full mr-2 self-end mb-1 flex-shrink-0 cursor-pointer"
-                          alt=""
-                          onClick={() => setPreviewUser(activeUser)}
-                        />
-                      )}
-
+                      <p className="text-[14px] sm:text-[15px] leading-relaxed break-words whitespace-pre-wrap">
+                        {msg.text}
+                      </p>
                       <div
-                        className={`max-w-[78%] sm:max-w-[65%] rounded-2xl px-4 py-2.5 shadow-sm ${
-                          isMe
-                            ? "bg-[#01AA85] text-white rounded-br-none"
-                            : "bg-white text-[#2A3D39] rounded-bl-none"
+                        className={`text-[10px] mt-1 flex items-center justify-end gap-1 ${
+                          isMe ? "text-white/80" : "text-gray-400"
                         }`}
                       >
-                        <p className="text-[14px] leading-relaxed break-words whitespace-pre-wrap">
-                          {msg.text}
-                        </p>
-                        <div
-                          className={`text-[10px] mt-1 flex items-center justify-end gap-1 ${
-                            isMe ? "text-white/80" : "text-gray-400"
-                          }`}
-                        >
-                          <span>{formatTimestamp(msg?.timestamp)}</span>
-                          {isMe && (
-                            <span className="text-xs">
-                              {msg.read ? "✓✓" : "✓"}
-                            </span>
-                          )}
-                        </div>
+                        <span>{formatTimestamp(msg?.timestamp)}</span>
+                        {isMe && (
+                          <span className="text-xs font-semibold">
+                            {msg.read ? "✓✓" : "✓"}
+                          </span>
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </section>
-
-            {/* Input Bar */}
-            <div className="sticky lg:bottom-0 bottom-[60px] p-3 w-[100%] bg-gradient-to-t from-black/5 to-transparent">
-              <form
-                onSubmit={handleSendMessage}
-                className="flex items-center bg-white h-[48px] w-[100%] px-3 rounded-full relative shadow-md border border-gray-200"
-              >
-                <input
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  className="h-full text-[#2A3D39] outline-none text-[15px] px-2 rounded-full w-[100%]"
-                  type="text"
-                  placeholder="Type a message..."
-                />
-                <button
-                  type="submit"
-                  disabled={!messageText.trim()}
-                  className="flex items-center justify-center p-2 rounded-full bg-[#01AA85] text-white hover:bg-[#019b79] transition-colors disabled:opacity-40 flex-shrink-0 shadow-sm"
-                >
-                  <RiSendPlaneFill size={18} />
-                </button>
-              </form>
+                  </div>
+                );
+              })}
             </div>
           </main>
+
+          {/* Input Bar (flex-shrink-0, always anchored at bottom) */}
+          <footer
+            className="flex-shrink-0 w-full bg-white border-t border-gray-200/80 p-2 sm:p-3 z-20 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]"
+            style={{ paddingBottom: "max(0.6rem, env(safe-area-inset-bottom))" }}
+          >
+            <form
+              onSubmit={handleSendMessage}
+              className="flex items-center bg-[#f0f2f5] hover:bg-[#ebedef] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#01AA85]/30 focus-within:border-[#01AA85] border border-gray-200 rounded-full h-[46px] sm:h-[48px] px-2 sm:px-3 transition-all"
+            >
+              <input
+                value={messageText}
+                onChange={(e) => setMessageText(e.target.value)}
+                className="flex-1 h-full bg-transparent text-[#2A3D39] outline-none text-[16px] px-2 sm:px-3 placeholder:text-gray-400"
+                type="text"
+                placeholder="Type a message..."
+                autoComplete="off"
+              />
+              <button
+                type="submit"
+                disabled={!messageText.trim()}
+                className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#01AA85] text-white hover:bg-[#019b79] transition-all disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0 shadow-xs"
+                title="Send message"
+              >
+                <RiSendPlaneFill size={18} />
+              </button>
+            </form>
+          </footer>
         </section>
       ) : (
         <section className="h-screen w-[100%] bg-[#e5f6f3] flex flex-col justify-center items-center p-6 text-center">
           <img src={logo} alt="Chat Logo" className="w-20 mb-4 drop-shadow-sm" />
           <h1 className="text-[26px] font-bold text-teal-800">
-            Welcome to Chatak
+            Welcome to Chatfrik
           </h1>
           <p className="text-gray-500 max-w-sm mt-2 text-sm">
             Select a conversation or start a new chat with friends

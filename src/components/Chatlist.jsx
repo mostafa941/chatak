@@ -104,7 +104,7 @@ const Chatlist = ({ setSelectedUser, onTotalUnreadChange }) => {
   };
 
   return (
-    <section className="relative flex flex-col item-start justify-start bg-white h-[100vh] w-[100%] md:w-[600px] border-r border-[#9090902c]">
+    <section className="relative flex flex-col item-start justify-start bg-white h-full w-[100%] md:w-[600px] border-r border-[#9090902c] overflow-hidden">
       {/* Avatar Preview Modal */}
       {previewUser && (
         <AvatarPreviewModal

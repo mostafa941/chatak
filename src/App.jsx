@@ -118,8 +118,10 @@ const App = () => {
     setSelectedUser(null);
   };
 
+  const isMobileChatOpen = activeTab === "chats" && !!selectedUser;
+
   return (
-    <div>
+    <div className="h-[100dvh] lg:h-screen w-full overflow-hidden">
       {user ? (
         <>
           {/* Toast notifications that slide down from the top */}
@@ -136,24 +138,28 @@ const App = () => {
             onClose={() => setIsSearchOpen(false)}
           />
 
-          <div className="flex lg:flex-row flex-col items-start w-[100%]">
+          <div className="flex lg:flex-row flex-col items-start w-full h-full overflow-hidden">
             <Navlinks
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               notificationCount={notifications.length}
               unreadMessagesCount={unreadMessagesCount}
               onOpenSearch={() => setIsSearchOpen(true)}
+              hideMobileBars={isMobileChatOpen}
             />
 
             {/* Main Content Area */}
             <div
-              className="flex w-full lg:mt-0 mt-[56px] mb-[60px] lg:mb-0"
-              style={{ minHeight: "calc(100vh - 56px)" }}
+              className={`flex w-full overflow-hidden ${
+                isMobileChatOpen
+                  ? "mt-0 mb-0 lg:mt-0 lg:mb-0 h-[100dvh] lg:h-screen"
+                  : "mt-[56px] mb-[60px] lg:mt-0 lg:mb-0 h-[calc(100dvh-116px)] lg:h-screen"
+              }`}
             >
               {activeTab === "chats" && (
                 <>
                   {/* Desktop: show both chatlist and chatbox side-by-side */}
-                  <div className="hidden lg:flex w-full">
+                  <div className="hidden lg:flex w-full h-full">
                     <Chatlist
                       setSelectedUser={handleSetSelectedUser}
                       onTotalUnreadChange={setUnreadMessagesCount}
@@ -162,7 +168,7 @@ const App = () => {
                   </div>
 
                   {/* Mobile: show either chatlist or chatbox */}
-                  <div className="lg:hidden flex w-full">
+                  <div className="lg:hidden flex w-full h-full">
                     {selectedUser ? (
                       <Chatbox
                         selectedUser={selectedUser}
